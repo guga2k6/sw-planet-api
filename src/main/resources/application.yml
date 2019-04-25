@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/sw_planet_api
+    username: sw-planet-api
+    password: sw-planet-api
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    generate-ddl: true
+
+logging:
+  level:
+    br:
+      com:
+        acme:
+          sw:
+            apis:
+              planetapi:
+                client:
+                  SwApiClient: FULL
+
+swapi:
+  url: https://swapi.co/
