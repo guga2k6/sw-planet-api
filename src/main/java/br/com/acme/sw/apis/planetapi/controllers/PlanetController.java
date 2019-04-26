@@ -31,4 +31,10 @@ public class PlanetController {
     public ResponseEntity<PlanetResponse> findById(@PathVariable("id") Long id) throws PlanetNotFoundException {
         return ResponseEntity.ok(new PlanetResponse(planetService.findById(id)));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) throws PlanetNotFoundException {
+        planetService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

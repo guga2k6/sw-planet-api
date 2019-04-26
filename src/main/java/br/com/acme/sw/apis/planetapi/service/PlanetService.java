@@ -34,4 +34,8 @@ public class PlanetService {
     public Planet findById(Long id) throws PlanetNotFoundException {
         return planetRepository.findById(id).orElseThrow(() -> new PlanetNotFoundException(id));
     }
+
+    public void deleteById(Long id) throws PlanetNotFoundException {
+        planetRepository.delete(findById(id));
+    }
 }

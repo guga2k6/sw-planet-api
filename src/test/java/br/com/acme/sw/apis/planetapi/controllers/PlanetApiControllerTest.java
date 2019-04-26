@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,6 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -94,6 +96,26 @@ public class PlanetApiControllerTest {
     @Test
     @DisplayName("Test Find Unknown Planet by ID returning error")
     void testFindUnknownPlanetById() {
+        ResponseEntity<ErrorResponse> response = this.restTemplate.getForEntity("/api/planets/{id}", ErrorResponse.class, 1234L);
+        assertNotNull("Response must not be null", response);
+        assertEquals("Status must be 404 - Bad Request", HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        ErrorResponse responseBody = response.getBody();
+        assertEquals("Expecting error message", "Planet identified by id 1234 was not found", responseBody.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test Delete Planet Coruscant by Id returning success")
+    void testDeletePlanetCoruscantById() {
+        ResponseEntity<Void> response = this.restTemplate.exchange("/api/planets/{id}", HttpMethod.DELETE, null, Void.class, 2L);
+        assertNotNull("Response must not be null", response);
+        assertEquals("Status must be 204 - No Content", HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertTrue("ResponseBody must be empty", !response.hasBody());
+    }
+
+    @Test
+    @DisplayName("Test Delete Unknown Planet by ID returning error")
+    void testDeleteUnknownPlanetById() {
         ResponseEntity<ErrorResponse> response = this.restTemplate.getForEntity("/api/planets/{id}", ErrorResponse.class, 1234L);
         assertNotNull("Response must not be null", response);
         assertEquals("Status must be 404 - Bad Request", HttpStatus.NOT_FOUND, response.getStatusCode());
