@@ -3,6 +3,7 @@ package br.com.acme.sw.apis.planetapi.service;
 import br.com.acme.sw.apis.planetapi.adapter.SwApiAdapter;
 import br.com.acme.sw.apis.planetapi.client.model.SwPlanetDTO;
 import br.com.acme.sw.apis.planetapi.entities.Planet;
+import br.com.acme.sw.apis.planetapi.exceptions.PlanetNotFoundException;
 import br.com.acme.sw.apis.planetapi.model.PlanetRequest;
 import br.com.acme.sw.apis.planetapi.repository.PlanetRepository;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,9 @@ public class PlanetService {
             .orElse(0));
 
         return planetRepository.save(newPlanet);
+    }
+
+    public Planet findById(Long id) throws PlanetNotFoundException {
+        return planetRepository.findById(id).orElseThrow(() -> new PlanetNotFoundException(id));
     }
 }

@@ -75,4 +75,30 @@ public class PlanetApiControllerTest {
         assertEquals("Expecting 1 error", Integer.valueOf(1), Integer.valueOf(responseBody.getErrors().size()));
         assertEquals("Expecting 1 error", "Terreno do planeta é obrigatório", responseBody.getErrors().get(0).getDefaultMessage());
     }
+
+    @Test
+    @DisplayName("Test Find Planet Alderaan by Id returning success")
+    void testFindPlanetAlderaanById() {
+        ResponseEntity<PlanetResponse> response = this.restTemplate.getForEntity("/api/planets/{id}", PlanetResponse.class, 1L);
+        assertNotNull("Response must not be null", response);
+        assertEquals("Status must be 200 - OK", HttpStatus.OK, response.getStatusCode());
+
+        PlanetResponse responseBody = response.getBody();
+        assertEquals("Planet id must be 1", Long.valueOf(1), responseBody.getId());
+        assertEquals("Planet name must be Alderaan", "Alderaan", responseBody.getName());
+        assertEquals("Planet terrain must be 'Grasslands, Mountains'", "grasslands, mountains", responseBody.getTerrain());
+        assertEquals("Planet climate must be temperate", "temperate", responseBody.getClimate());
+        assertEquals("Planet appearances in film must be 2", Integer.valueOf(2), responseBody.getFilmAppearances());
+    }
+
+    @Test
+    @DisplayName("Test Find Unknown Planet by ID returning error")
+    void testFindUnknownPlanetById() {
+        ResponseEntity<ErrorResponse> response = this.restTemplate.getForEntity("/api/planets/{id}", ErrorResponse.class, 1234L);
+        assertNotNull("Response must not be null", response);
+        assertEquals("Status must be 404 - Bad Request", HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        ErrorResponse responseBody = response.getBody();
+        assertEquals("Expecting error message", "Planet identified by id 1234 was not found", responseBody.getMessage());
+    }
 }
