@@ -6,6 +6,8 @@ import br.com.acme.sw.apis.planetapi.exceptions.PlanetNotFoundException;
 import br.com.acme.sw.apis.planetapi.model.PlanetRequest;
 import br.com.acme.sw.apis.planetapi.model.PlanetResponse;
 import br.com.acme.sw.apis.planetapi.service.PlanetService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,16 @@ public class PlanetController {
     @GetMapping("/{id}")
     public ResponseEntity<PlanetResponse> findById(@PathVariable("id") Long id) throws PlanetNotFoundException {
         return ResponseEntity.ok(new PlanetResponse(planetService.findById(id)));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PlanetResponse>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(planetService.findAll(pageable).map(PlanetResponse::new));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<PlanetResponse>> findByName(@RequestParam("name") String name, Pageable pageable) {
+        return ResponseEntity.ok(planetService.findByName(name, pageable).map(PlanetResponse::new));
     }
 
     @GetMapping("/swapi")

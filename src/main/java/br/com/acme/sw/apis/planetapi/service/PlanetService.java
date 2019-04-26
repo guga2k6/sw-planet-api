@@ -6,6 +6,8 @@ import br.com.acme.sw.apis.planetapi.entities.Planet;
 import br.com.acme.sw.apis.planetapi.exceptions.PlanetNotFoundException;
 import br.com.acme.sw.apis.planetapi.model.PlanetRequest;
 import br.com.acme.sw.apis.planetapi.repository.PlanetRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,5 +39,13 @@ public class PlanetService {
 
     public void deleteById(Long id) throws PlanetNotFoundException {
         planetRepository.delete(findById(id));
+    }
+
+    public Page<Planet> findByName(String name, Pageable pageable) {
+        return planetRepository.findByNameLike(name, pageable);
+    }
+
+    public Page<Planet> findAll(Pageable pageable) {
+        return planetRepository.findAll(pageable);
     }
 }

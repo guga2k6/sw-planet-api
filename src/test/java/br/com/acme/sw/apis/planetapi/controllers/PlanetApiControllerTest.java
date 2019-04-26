@@ -5,6 +5,7 @@ import br.com.acme.sw.apis.planetapi.client.model.SwPlanetDTO;
 import br.com.acme.sw.apis.planetapi.model.ErrorResponse;
 import br.com.acme.sw.apis.planetapi.model.PlanetRequest;
 import br.com.acme.sw.apis.planetapi.model.PlanetResponse;
+import br.com.acme.sw.apis.planetapi.model.SimplePage;
 import br.com.six2six.fixturefactory.Fixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -94,6 +95,38 @@ public class PlanetApiControllerTest {
         assertEquals("Planet terrain must be 'Grasslands, Mountains'", "grasslands, mountains", responseBody.getTerrain());
         assertEquals("Planet climate must be temperate", "temperate", responseBody.getClimate());
         assertEquals("Planet appearances in film must be 2", Integer.valueOf(2), responseBody.getFilmAppearances());
+    }
+
+    @Test
+    @DisplayName("Test Find Planet Alderaan by Name returning success")
+    void testFindPlanetAlderaanByName() {
+        ParameterizedTypeReference<SimplePage<PlanetResponse>> reference = new ParameterizedTypeReference<SimplePage<PlanetResponse>>() {};
+        ResponseEntity<SimplePage<PlanetResponse>> response = this.restTemplate.exchange("/api/planets/search?name={name}", HttpMethod.GET, null, reference, "Alderaan");
+        assertNotNull("Response must not be null", response);
+        assertEquals("Status must be 200 - OK", HttpStatus.OK, response.getStatusCode());
+
+        SimplePage<PlanetResponse> page = response.getBody();
+        assertTrue("Planet id must be greater than or equal to 1", page.getTotalElements() >= 1);
+
+        PlanetResponse planetResponse = page.getContent().get(0);
+        assertEquals("Planet name must be Alderaan", "Alderaan", planetResponse.getName());
+        assertEquals("Planet terrain must be 'Grasslands, Mountains'", "grasslands, mountains", planetResponse.getTerrain());
+        assertEquals("Planet climate must be temperate", "temperate", planetResponse.getClimate());
+        assertEquals("Planet appearances in film must be 2", Integer.valueOf(2), planetResponse.getFilmAppearances());
+    }
+
+    @Test
+    @DisplayName("Test Find All Planets returning success")
+    void testFindAllPlanets() {
+        ParameterizedTypeReference<SimplePage<PlanetResponse>> reference = new ParameterizedTypeReference<SimplePage<PlanetResponse>>() {};
+        ResponseEntity<SimplePage<PlanetResponse>> response = this.restTemplate.exchange("/api/planets", HttpMethod.GET, null, reference);
+        assertNotNull("Response must not be null", response);
+        assertEquals("Status must be 200 - OK", HttpStatus.OK, response.getStatusCode());
+
+        SimplePage<PlanetResponse> page = response.getBody();
+        assertTrue("Planet id must be greater than or equal to 1", page.getTotalElements() >= 1);
+        assertNotNull("Content must not be null", page.getContent());
+        assertTrue("Content must not be empty", !page.getContent().isEmpty());
     }
 
     @Test

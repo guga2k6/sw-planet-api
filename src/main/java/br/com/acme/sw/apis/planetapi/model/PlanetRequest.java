@@ -2,7 +2,6 @@ package br.com.acme.sw.apis.planetapi.model;
 
 import br.com.acme.sw.apis.planetapi.entities.Planet;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
