@@ -1,7 +1,7 @@
 package br.com.acme.sw.apis.planetapi.client;
 
-import br.com.acme.sw.apis.planetapi.client.model.PageDTO;
-import br.com.acme.sw.apis.planetapi.client.model.PlanetDTO;
+import br.com.acme.sw.apis.planetapi.client.model.SwPageDTO;
+import br.com.acme.sw.apis.planetapi.client.model.SwPlanetDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ public interface SwApiClient {
     String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.105 Safari/537.36;";
 
     @GetMapping(value = "/api/planets/", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    ResponseEntity<PageDTO<PlanetDTO>> findPlanets(@RequestHeader(value = "User-Agent", defaultValue = USER_AGENT) String userAgent, @RequestParam(required = false) Integer page, @RequestParam("search") String name);
+    ResponseEntity<SwPageDTO<SwPlanetDTO>> findPlanets(@RequestHeader(value = "User-Agent", defaultValue = USER_AGENT) String userAgent, @RequestParam(required = false) Integer page, @RequestParam("search") String name);
 
     @GetMapping(value = "/api/planets/{id}/", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    ResponseEntity<PlanetDTO> findPlanetById(@RequestHeader(value = "User-Agent", defaultValue = USER_AGENT) String userAgent, @PathVariable("id") Integer id);
+    ResponseEntity<SwPlanetDTO> findPlanetById(@RequestHeader(value = "User-Agent", defaultValue = USER_AGENT) String userAgent, @PathVariable("id") Integer id);
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PageDTO<T> {
+public class SwPageDTO<T> {
 
     private Long count;
     private String next;

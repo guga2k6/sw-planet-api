@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:sw_planet_api
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: true
+
+logging:
+  level:
+    br:
+      com:
+        acme:
+          sw:
+            apis:
+              planetapi:
+                client:
+                  SwApiClient: FULL
+
+swapi:
+  url: https://swapi.co/

@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
-public class PlanetDTO {
+public class SwPlanetDTO {
 
     private String name;
 

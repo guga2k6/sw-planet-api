@@ -1,0 +1,2 @@
+INSERT INTO planet(climate, film_appearances, name, terrain) VALUES('temperate', 2, 'Alderaan', 'grasslands, mountains');
+INSERT INTO planet(climate, film_appearances, name, terrain) VALUES('temperate', 4, 'Coruscant', 'cityscape, mountains');
