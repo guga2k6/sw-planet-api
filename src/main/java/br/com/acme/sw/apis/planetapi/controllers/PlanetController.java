@@ -1,5 +1,7 @@
 package br.com.acme.sw.apis.planetapi.controllers;
 
+import br.com.acme.sw.apis.planetapi.adapter.SwApiAdapter;
+import br.com.acme.sw.apis.planetapi.client.model.SwPageDTO;
 import br.com.acme.sw.apis.planetapi.exceptions.PlanetNotFoundException;
 import br.com.acme.sw.apis.planetapi.model.PlanetRequest;
 import br.com.acme.sw.apis.planetapi.model.PlanetResponse;
@@ -16,9 +18,11 @@ public class PlanetController {
 
 
     private final PlanetService planetService;
+    private final SwApiAdapter swApiAdapter;
 
-    public PlanetController(PlanetService planetService) {
+    public PlanetController(PlanetService planetService, SwApiAdapter swApiAdapter) {
         this.planetService = planetService;
+        this.swApiAdapter = swApiAdapter;
     }
 
     @PostMapping
@@ -30,6 +34,11 @@ public class PlanetController {
     @GetMapping("/{id}")
     public ResponseEntity<PlanetResponse> findById(@PathVariable("id") Long id) throws PlanetNotFoundException {
         return ResponseEntity.ok(new PlanetResponse(planetService.findById(id)));
+    }
+
+    @GetMapping("/swapi")
+    public ResponseEntity<SwPageDTO> findFromSwApi(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "name", required = false) String name) throws PlanetNotFoundException {
+        return ResponseEntity.ok(swApiAdapter.findPlanets(page, name));
     }
 
     @DeleteMapping("/{id}")

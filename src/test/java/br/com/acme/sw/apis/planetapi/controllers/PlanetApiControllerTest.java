@@ -1,5 +1,7 @@
 package br.com.acme.sw.apis.planetapi.controllers;
 
+import br.com.acme.sw.apis.planetapi.client.model.SwPageDTO;
+import br.com.acme.sw.apis.planetapi.client.model.SwPlanetDTO;
 import br.com.acme.sw.apis.planetapi.model.ErrorResponse;
 import br.com.acme.sw.apis.planetapi.model.PlanetRequest;
 import br.com.acme.sw.apis.planetapi.model.PlanetResponse;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,6 +94,24 @@ public class PlanetApiControllerTest {
         assertEquals("Planet terrain must be 'Grasslands, Mountains'", "grasslands, mountains", responseBody.getTerrain());
         assertEquals("Planet climate must be temperate", "temperate", responseBody.getClimate());
         assertEquals("Planet appearances in film must be 2", Integer.valueOf(2), responseBody.getFilmAppearances());
+    }
+
+    @Test
+    @DisplayName("Test Find Planet Tatooine by name using SwApi returning success")
+    void testFindPlanetTatooineByNameUsingSwApi() {
+        ParameterizedTypeReference<SwPageDTO<SwPlanetDTO>> reference = new ParameterizedTypeReference<SwPageDTO<SwPlanetDTO>>() {};
+        ResponseEntity<SwPageDTO<SwPlanetDTO>> response = this.restTemplate.exchange("/api/planets/swapi?page={page}&name={name}", HttpMethod.GET, null, reference, 1, "Tatooine");
+        assertNotNull("Response must not be null", response);
+        assertEquals("Status must be 200 - OK", HttpStatus.OK, response.getStatusCode());
+
+        SwPageDTO<SwPlanetDTO> responseBody = response.getBody();
+        assertEquals("Page count must be 1", Long.valueOf(1), responseBody.getCount());
+
+        SwPlanetDTO planet = responseBody.getResults().get(0);
+        assertEquals("Planet name must be Tatooine", "Tatooine", planet.getName());
+        assertEquals("Planet terrain must be 'desert'", "desert", planet.getTerrain());
+        assertEquals("Planet climate must be temperate", "arid", planet.getClimate());
+        assertEquals("Planet appearances in film must be 5", Integer.valueOf(5), Integer.valueOf(planet.getFilms().size()));
     }
 
     @Test

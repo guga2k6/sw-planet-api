@@ -30,8 +30,8 @@ public class FixtureLoader implements TemplateLoader {
 
     private void loadSwApiFixtures() {
         Fixture.of(SwPlanetDTO.class).addTemplate("tatooine", new Rule() {{
-            add("climate", "Arid");
-            add("terrain", "Desert");
+            add("climate", "arid");
+            add("terrain", "desert");
             add("name", "Tatooine");
             add("films", IntStream.of(1, 3, 4, 5, 6).mapToObj(x -> MessageFormat.format("https://swapi.co/api/films/{0}/", x)).collect(Collectors.toList()));
         }});
